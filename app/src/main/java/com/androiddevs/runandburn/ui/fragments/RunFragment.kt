@@ -48,25 +48,25 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         return binding.root
     }
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun reqNotification(){
-       when(!TrackingUtility.hasNotifcationPermission(requireContext())){
-          true-> pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-
-           shouldShowRequestPermissionRationale(  Manifest.permission.POST_NOTIFICATIONS) -> {
-               EasyPermissions.requestPermissions(
-                   this,
-                   "You need to accept the permission to use this app",
-                   1,
-                   Manifest.permission.POST_NOTIFICATIONS
-               )
-           }
-
-           else -> {
-               pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-           }
-       }
-    }
+//    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+//    private fun reqNotification(){
+//       when(!TrackingUtility.hasNotifcationPermission(requireContext())){
+//          true-> pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+//
+//           shouldShowRequestPermissionRationale(  Manifest.permission.POST_NOTIFICATIONS) -> {
+//               EasyPermissions.requestPermissions(
+//                   this,
+//                   "You need to accept the permission to use this app",
+//                   1,
+//                   Manifest.permission.POST_NOTIFICATIONS
+//               )
+//           }
+//
+//           else -> {
+//               pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+//           }
+//       }
+//    }
 
 
 
@@ -90,7 +90,7 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
                 EasyPermissions.requestPermissions(
                     this,
-                    "You need to accept the permission to use this app",
+                    "You need to accept the permissionbbb to use this app",
                     REQUEST_CODE_LOCATION_PERMISSION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
@@ -99,11 +99,11 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             } else {
                 EasyPermissions.requestPermissions(
                     this,
-                    "You need to accept the permission to use this app",
+                    "You need to accept the permission to use iiii this app",
                     REQUEST_CODE_LOCATION_PERMISSION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                   // Manifest.permission.ACCESS_BACKGROUND_LOCATION
                 )
             }
         }
@@ -134,10 +134,7 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
    fun perm(){
        when {
-           ContextCompat.checkSelfPermission(
-               requireContext(),
-               Manifest.permission.POST_NOTIFICATIONS
-           ) == PackageManager.PERMISSION_GRANTED -> {
+          TrackingUtility.requestNotificationPermission(requireContext())-> {
                // You can use the API that requires the permission.
            }
            shouldShowRequestPermissionRationale(  Manifest.permission.POST_NOTIFICATIONS) -> {
