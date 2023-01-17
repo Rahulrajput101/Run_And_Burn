@@ -14,8 +14,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevs.runandburn.R
+import com.androiddevs.runandburn.adapter.RunAdapter
 import com.androiddevs.runandburn.databinding.FragmentRunBinding
 import com.androiddevs.runandburn.ui.viewModels.MainViewModel
 import com.androiddevs.runandburn.utlis.Constants.REQUEST_CODE_LOCATION_PERMISSION
@@ -28,6 +31,7 @@ import pub.devrel.easypermissions.EasyPermissions
 class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding: FragmentRunBinding
     private val viewModel: MainViewModel by viewModels()
+    private lateinit var adapter : RunAdapter
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
@@ -39,6 +43,15 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         perm()
         requestPermission()
         //reqNotification()
+
+        adapter = RunAdapter()
+        binding.rvRuns.adapter = adapter
+        binding.rvRuns.layoutManager =LinearLayoutManager(context)
+
+
+        viewModel.setRunAdapterByDate().observe(viewLifecycleOwner, Observer {
+            adapter.differ.submitList(it)
+        })
 
         binding.fab.setOnClickListener {
             findNavController().navigate(RunFragmentDirections.actionRunFragmentToTrackingFragment())

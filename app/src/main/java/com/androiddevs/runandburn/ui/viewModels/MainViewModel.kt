@@ -14,6 +14,10 @@ class MainViewModel @Inject constructor(
 ) : ViewModel(){
 
 
+
+  fun setRunAdapterByDate() = mainRepositary.getAllRunSortedByDates()
+
+
   fun insert(run : Run) = viewModelScope.launch {
     mainRepositary.insertRun(run)
   }

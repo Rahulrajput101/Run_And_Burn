@@ -198,7 +198,6 @@ class TrackingService : LifecycleService() {
 
          if (!serviceKilled){
              currentNotificationBuilder =baseNotificationBuilder
-                 .setPriority(NotificationCompat.PRIORITY_MAX)
                  .addAction(R.drawable.ic_baseline_pause_24,notificationActionText,pendingIntent)
 
              notificationManager.notify(NOTIFICATION_ID,currentNotificationBuilder.build())
@@ -309,7 +308,7 @@ class TrackingService : LifecycleService() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createchannel(notificationManager: NotificationManager){
         val channel = NotificationChannel(NOTIFICATION_CHANNNEL_ID, NOTIFICATION_CHANNEL_NAME,
-          IMPORTANCE_HIGH)
+          IMPORTANCE_LOW)
         notificationManager.createNotificationChannel(channel)
     }
 }

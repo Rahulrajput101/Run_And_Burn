@@ -91,7 +91,6 @@ class TrackingFragment : Fragment(),MenuProvider {
         }
 
         binding.btnFinishRun.setOnClickListener{
-
             zoomToSeeWholeTrack()
             saveRunToDatabase()
         }
@@ -175,7 +174,7 @@ class TrackingFragment : Fragment(),MenuProvider {
                 bounds.build(),
                 mapView.width,
                 mapView.height,
-                (mapView.height * 0.05f).toInt()
+                (mapView.height * 0.15f).toInt()
             )
         )
     }
