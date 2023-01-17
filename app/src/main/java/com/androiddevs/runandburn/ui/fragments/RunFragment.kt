@@ -20,10 +20,11 @@ import com.androiddevs.runandburn.databinding.FragmentRunBinding
 import com.androiddevs.runandburn.ui.viewModels.MainViewModel
 import com.androiddevs.runandburn.utlis.Constants.REQUEST_CODE_LOCATION_PERMISSION
 import com.androiddevs.runandburn.utlis.TrackingUtility
+import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
-
+@AndroidEntryPoint
 class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private lateinit var binding: FragmentRunBinding
     private val viewModel: MainViewModel by viewModels()

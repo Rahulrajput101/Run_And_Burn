@@ -50,6 +50,8 @@ object ServiceModule {
         .setSmallIcon(R.drawable.ic_baseline_directions_run_24_black)
         .setContentTitle("Run and Burn")
         .setContentText("00:00:00")
+        .setPriority(NotificationCompat.PRIORITY_MAX)
+        .setShowWhen(true)
         .setContentIntent(pendingIntent)
 
 

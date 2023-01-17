@@ -5,6 +5,7 @@ import android.app.Application
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.NotificationManager.IMPORTANCE_HIGH
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
@@ -43,7 +44,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
-import com.google.android.gms.location.Priority.PRIORITY_HIGH_ACCURACY
+
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -62,6 +63,7 @@ typealias Polylines = MutableList<Polyline>
 class TrackingService : LifecycleService() {
 
     var isFirstRun = true
+     var serviceKilled = false
      @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -115,7 +117,10 @@ class TrackingService : LifecycleService() {
                  pauseService()
              }
 
-             ACTION_STOP_SERVICE -> Timber.d("ACTION_stop")
+             ACTION_STOP_SERVICE -> {
+                 killService()
+                 Timber.d("ACTION_stop")
+             }
          }
         }
         return super.onStartCommand(intent, flags, startId)
@@ -158,6 +163,17 @@ class TrackingService : LifecycleService() {
 
 
 
+     private fun killService(){
+         serviceKilled=true
+         isFirstRun = true
+         pauseService()
+         postInitialValues()
+         stopForeground(STOP_FOREGROUND_DETACH)
+     }
+
+
+
+
      private fun updateNotificationState(isTracking: Boolean){
 
          val notificationActionText = if(isTracking) "Pause" else "Resume"
@@ -180,10 +196,14 @@ class TrackingService : LifecycleService() {
              set(currentNotificationBuilder,java.util.ArrayList<NotificationCompat.Action>())
          }
 
-         currentNotificationBuilder =baseNotificationBuilder
-             .addAction(R.drawable.ic_baseline_pause_24,notificationActionText,pendingIntent)
+         if (!serviceKilled){
+             currentNotificationBuilder =baseNotificationBuilder
+                 .setPriority(NotificationCompat.PRIORITY_MAX)
+                 .addAction(R.drawable.ic_baseline_pause_24,notificationActionText,pendingIntent)
 
-          notificationManager.notify(NOTIFICATION_ID,currentNotificationBuilder.build())
+             notificationManager.notify(NOTIFICATION_ID,currentNotificationBuilder.build())
+         }
+
 
 
 
@@ -249,7 +269,6 @@ class TrackingService : LifecycleService() {
         startTimer()
         isTracking.postValue(true)
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE ) as NotificationManager
-
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             createchannel(notificationManager)
         }
@@ -264,10 +283,13 @@ class TrackingService : LifecycleService() {
         startForeground(NOTIFICATION_ID,baseNotificationBuilder.build())
 
         timeRunInSeconds.observe(this, Observer {
-            val notification = currentNotificationBuilder
-                .setContentText(TrackingUtility.getformattedStopWatchTime(it*1000))
+            if(!serviceKilled){
+                val notification = currentNotificationBuilder
+                    .setContentText(TrackingUtility.getformattedStopWatchTime(it*1000))
 
-            notificationManager.notify(NOTIFICATION_ID,notification.build())
+                notificationManager.notify(NOTIFICATION_ID,notification.build())
+            }
+
         })
 
 
@@ -287,7 +309,7 @@ class TrackingService : LifecycleService() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createchannel(notificationManager: NotificationManager){
         val channel = NotificationChannel(NOTIFICATION_CHANNNEL_ID, NOTIFICATION_CHANNEL_NAME,
-          IMPORTANCE_LOW)
+          IMPORTANCE_HIGH)
         notificationManager.createNotificationChannel(channel)
     }
 }
