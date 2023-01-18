@@ -169,6 +169,7 @@ class TrackingService : LifecycleService() {
          pauseService()
          postInitialValues()
          stopForeground(STOP_FOREGROUND_DETACH)
+         stopSelf()
      }
 
 

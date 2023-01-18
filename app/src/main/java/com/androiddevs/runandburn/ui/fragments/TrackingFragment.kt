@@ -1,9 +1,11 @@
 package com.androiddevs.runandburn.ui.fragments
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
@@ -42,9 +44,10 @@ import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.*
 import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
-import java.util.Calendar
+import java.util.*
 import kotlin.math.round
 
 @AndroidEntryPoint
@@ -71,7 +74,7 @@ class TrackingFragment : Fragment(),MenuProvider {
         savedInstanceState: Bundle?
     ): View? {
 
-       // MapsInitializer.initialize(requireContext(), MapsInitializer.Renderer.LATEST,)
+
         // Inflate the layout for this fragment
         binding = FragmentTrackingBinding.inflate(inflater)
         mapView = binding.mapView
@@ -90,10 +93,18 @@ class TrackingFragment : Fragment(),MenuProvider {
             toogleRun()
         }
 
+
         binding.btnFinishRun.setOnClickListener{
             zoomToSeeWholeTrack()
-            saveRunToDatabase()
+            val timer = Timer()
+            val task = object : TimerTask() {
+                override fun run() {
+                    saveRunToDatabase()
+                }
+            }
+            timer.schedule(task, 1000)
         }
+
        subscribeToObserves()
 
         return binding.root
@@ -119,11 +130,13 @@ class TrackingFragment : Fragment(),MenuProvider {
 
 
    // @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+
     private fun toogleRun(){
         if(isTracking){
               sendCommandToService(ACTION_PAUSE_SERVICE)
             menu?.getItem(0)?.isVisible=true
         }else{
+            binding.tvTimer.text = "00:00:00:00"
             sendCommandToService(ACTION_START_OR_RESUME)
         }
 
@@ -165,11 +178,13 @@ class TrackingFragment : Fragment(),MenuProvider {
         val bounds = LatLngBounds.Builder()
         for(polyline in pathPoints) {
             for(pos in polyline) {
-                bounds.include(pos).build()
+                bounds.include(pos)
             }
         }
 
+
         map?.moveCamera(
+
             CameraUpdateFactory.newLatLngBounds(
                 bounds.build(),
                 mapView.width,
@@ -177,7 +192,18 @@ class TrackingFragment : Fragment(),MenuProvider {
                 (mapView.height * 0.15f).toInt()
             )
         )
+
     }
+//
+//    //Calculate the markers to get their position
+//    LatLngBounds.Builder b = new LatLngBounds.Builder();
+//    for (Marker m : markers) {
+//        b.include(m.getPosition());
+//    }
+//    LatLngBounds bounds = b.build();
+////Change the padding as per needed
+//    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 25,25,5);
+//    mMap.animateCamera(cu);
 
     private fun saveRunToDatabase(){
         map?.snapshot {  bmp->
@@ -294,10 +320,7 @@ class TrackingFragment : Fragment(),MenuProvider {
         super.onSaveInstanceState(outState)
         mapView.onSaveInstanceState(outState)
     }
-    private val pushNotificationPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) {
-    }
+
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.tracking_menu,menu)
