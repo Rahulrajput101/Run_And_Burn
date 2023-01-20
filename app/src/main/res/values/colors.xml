@@ -23,4 +23,28 @@
     <color name="md_blue_A700">#2962FF</color>
     <color name="colorAccent">#FFE600</color>
     <color name="errorColor">#D50000</color>
+<!--    Green: #4CAF50-->
+<!--    Brown: #795548-->
+<!--    Blue: #2196F3-->
+<!--    Beige: #F5F5DC-->
+<!--    High-contrast colors:-->
+<!--    Black: #000000-->
+<!--    White: #FFFFFF-->
+<!--    Dark blue: #00008B-->
+<!--    Yellow: #FFFF00-->
+
+<!--    Bright and bold colors:-->
+<!--    Orange: #FFA726-->
+<!--    Blue: #2196F3-->
+<!--    Green: #4CAF50-->
+<!--    Yellow: #FFEB3B-->
+<!--    Red: #F44336-->
+<!--    Black: #000000-->
+<!--    Calming and soothing colors:-->
+<!--    Light blue: #87CEFA-->
+<!--    Dark blue: #00008B-->
+<!--    Light green: #98FB98-->
+<!--    Dark green: #006400-->
+<!--    Pink: #FFC0CB-->
+<!--    Purple: #9C27B0-->
 </resources>

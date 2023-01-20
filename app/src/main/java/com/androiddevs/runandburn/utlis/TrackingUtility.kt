@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Build.VERSION_CODES.Q
+import android.os.PowerManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -51,6 +52,16 @@ object TrackingUtility {
             Manifest.permission.POST_NOTIFICATIONS
         ) == PackageManager.PERMISSION_GRANTED
 
+    }
+
+
+    fun reqIngnoreBatterConsumption(context: Context?) : Boolean {
+        val packageName = context?.packageName
+        val powerManager = context?.getSystemService(Context.POWER_SERVICE) as PowerManager
+        if (!powerManager.isIgnoringBatteryOptimizations(packageName)){
+            return false
+        }
+        return true
     }
 
     fun getformattedStopWatchTime( ms :  Long , includeMillis : Boolean =false) : String{

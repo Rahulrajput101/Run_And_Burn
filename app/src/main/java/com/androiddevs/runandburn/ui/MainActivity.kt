@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
+
          navigateToTracking(intent)
         setSupportActionBar(binding.toolbar)
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
@@ -47,6 +48,11 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+    fun textToolbar(toolbartext : String) {
+         binding.tvToolbarTitle.text = toolbartext
+
+    }
+
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
