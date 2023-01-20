@@ -11,23 +11,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <TextView
             android:id="@+id/tvWelcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="Welcome!\nPlease enter your name and weight."
+            android:text="Welcome!"
             android:textAlignment="center"
-            android:textSize="36sp"
-            app:layout_constraintBottom_toTopOf="@+id/tilName"
+            android:textColor="@color/black"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/textView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            app:layout_constraintHorizontal_bias="0.485"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilName"
+            app:hintTextColor="@color/black"
+            app:boxStrokeColor="@color/black"
             android:layout_width="0dp"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
@@ -44,6 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:textColor="@color/black"
                 android:hint="Your Name"
                 android:inputType="textPersonName" />
 
@@ -52,6 +56,8 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilWeight"
+            app:hintTextColor="@color/black"
+            app:boxStrokeColor="@color/black"
             android:layout_width="0dp"
             android:layout_marginStart="25dp"
             android:layout_marginEnd="25dp"
@@ -67,6 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:textColor="@color/black"
                 android:hint="Your Weight"
                 android:inputType="textPersonName" />
 
@@ -77,7 +84,7 @@
             android:id="@+id/constraintBottom"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:background="@color/md_blue_900"
+            android:background="@color/newBackgroundBlue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -89,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:text="Continue"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -97,6 +104,20 @@
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enter the details"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/tilName"
+            app:layout_constraintEnd_toEndOf="@+id/tvWelcome"
+            app:layout_constraintHorizontal_bias="0.486"
+            app:layout_constraintStart_toStartOf="@+id/tvWelcome"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.748" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -29,6 +29,9 @@ class RunAdapter : RecyclerView.Adapter<RunAdapter.MyRunViewHolder>() {
 
      val differ = AsyncListDiffer(this,differCallBack)
 
+    fun submitList(list: List<Run>) = differ.submitList(list)
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyRunViewHolder {
       return  MyRunViewHolder.from(parent)
     }
@@ -57,6 +60,7 @@ class RunAdapter : RecyclerView.Adapter<RunAdapter.MyRunViewHolder>() {
             Glide.with(binding.root).load(run.image).into(binding.imageView)
             val calendar = Calendar.getInstance().apply {
                 timeInMillis = run.timeStamp
+                //hj
             }
             val dateFormat = SimpleDateFormat("dd.MM.yy", Locale.getDefault())
             binding.timeStampText.text =dateFormat.format(calendar.time)

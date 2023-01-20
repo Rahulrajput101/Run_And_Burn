@@ -1,21 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
-
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.fragments.StatisticFragment">
+        android:layout_height="match_parent">
 
-        <!-- TODO: Update blank fragment layout -->
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/totalDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0km"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toTopOf="@+id/totalDistanceInfo"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/totalDistanceInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Distance"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/totaltimeInfo"
+            app:layout_constraintEnd_toEndOf="@+id/totalDistance"
+            app:layout_constraintStart_toStartOf="@+id/totalDistance"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/totalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00:00"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintBottom_toTopOf="@+id/totaltimeInfo"
+            app:layout_constraintEnd_toStartOf="@+id/guidelineVertical"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/totaltimeInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Time"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/guideline2"
+            app:layout_constraintEnd_toEndOf="@+id/totalTime"
+            app:layout_constraintStart_toStartOf="@+id/totalTime"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/totalAvgSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 Km/h"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toTopOf="@+id/totalAvgSpeedInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.472"
+            app:layout_constraintStart_toStartOf="@+id/guidelineVertical" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/totalAvgSpeedInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="TotalAverage Speed"
+            app:layout_constraintBottom_toTopOf="@+id/totalCaloriesBurnedInfo"
+            app:layout_constraintEnd_toEndOf="@+id/totalAvgSpeed"
+            app:layout_constraintStart_toStartOf="@+id/totalAvgSpeed"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/totalCaloriesBurned"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0 kcl"
+            android:textColor="@color/black"
+            android:textSize="40sp"
+            app:layout_constraintBottom_toTopOf="@+id/totalCaloriesBurnedInfo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guidelineVertical" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/totalCaloriesBurnedInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="Total Calories Burned"
+            app:layout_constraintBottom_toTopOf="@+id/guideline2"
+            app:layout_constraintEnd_toEndOf="@+id/totalCaloriesBurned"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/totalCaloriesBurned"
+            app:layout_constraintTop_toTopOf="parent"
+             />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineVertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.7" />
+
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/BarGraph"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/totalCaloriesBurnedInfo" />
 
-    </FrameLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

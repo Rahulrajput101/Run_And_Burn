@@ -5,10 +5,11 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <Spinner
-            android:id="@+id/spFilter"
+            android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:entries="@array/filter_options"
@@ -22,9 +23,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sort by:"
+            android:textColor="@color/black"
             android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/spFilter"
-            app:layout_constraintEnd_toStartOf="@+id/spFilter"
+            app:layout_constraintBottom_toBottomOf="@+id/spinner"
+            app:layout_constraintEnd_toStartOf="@+id/spinner"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -35,14 +37,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spFilter" />
+            app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_baseline_add_24"
-            app:backgroundTint="@color/colorAccent"
+            app:backgroundTint="@color/md_blue_400"
             app:fabSize="normal"
             app:rippleColor="@android:color/white"
             android:layout_marginEnd="32dp"

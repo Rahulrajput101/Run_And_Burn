@@ -290,6 +290,10 @@ class TrackingService : LifecycleService() {
                 notificationManager.notify(NOTIFICATION_ID,notification.build())
             }
 
+            if(serviceKilled){
+                notificationManager.cancel(NOTIFICATION_ID)
+            }
+
         })
 
 

@@ -23,4 +23,55 @@
     <color name="md_blue_A700">#2962FF</color>
     <color name="colorAccent">#FFE600</color>
     <color name="errorColor">#D50000</color>
+
+    <color name ="newBackgroundBlue">#C0E2F8</color>
+    <color name="newToolbar">#A2D5F4</color>
+
+    <color name="green22">#4CAF50</color>
+    <color name="brown22">#795548</color>
+    <color name="blue22">#2196F3</color>
+    <color name="beige22">#F5F5DC</color>
+    <!--    Calming and soothing colors:-->
+    <!--    Light blue: -->
+    <!--    Dark blue: -->
+    <!--    Light green: -->
+    <!--    Dark green: -->
+    <!--    Pink: -->
+    <!--    Purple: -->
+
+
+    <color name="backgroundblue22">#DBECF6</color>
+    <color name="lightBlue22">#87CEFA</color>
+    <color name="darkBlue22">#00008B</color>
+    <color name="lightGreen22">#98FB98</color>
+    <color name="darkGreen22">#006400</color>
+    <color name="pink22">#FFC0CB</color>
+    <color name="purple22">#9C27B0</color>
+
+
+
+<!--    Green: -->
+<!--    Brown: -->
+<!--    Blue: -->
+<!--    Beige: -->
+<!--    High-contrast colors:-->
+<!--    Black: #000000-->
+<!--    White: #FFFFFF-->
+<!--    Dark blue: #00008B-->
+<!--    Yellow: #FFFF00-->
+
+<!--    Bright and bold colors:-->
+<!--    Orange: #FFA726-->
+<!--    Blue: #2196F3-->
+<!--    Green: #4CAF50-->
+<!--    Yellow: #FFEB3B-->
+<!--    Red: #F44336-->
+<!--    Black: #000000-->
+<!--    Calming and soothing colors:-->
+<!--    Light blue: #87CEFA-->
+<!--    Dark blue: #00008B-->
+<!--    Light green: #98FB98-->
+<!--    Dark green: #006400-->
+<!--    Pink: #FFC0CB-->
+<!--    Purple: #9C27B0-->
 </resources>

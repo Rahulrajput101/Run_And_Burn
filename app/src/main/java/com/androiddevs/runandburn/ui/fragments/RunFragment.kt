@@ -1,16 +1,27 @@
 package com.androiddevs.runandburn.ui.fragments
 
 import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.location.LocationManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -20,27 +31,48 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevs.runandburn.R
 import com.androiddevs.runandburn.adapter.RunAdapter
 import com.androiddevs.runandburn.databinding.FragmentRunBinding
+import com.androiddevs.runandburn.ui.MainActivity
 import com.androiddevs.runandburn.ui.viewModels.MainViewModel
 import com.androiddevs.runandburn.utlis.Constants.REQUEST_CODE_LOCATION_PERMISSION
+import com.androiddevs.runandburn.utlis.SortType
 import com.androiddevs.runandburn.utlis.TrackingUtility
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.gms.location.Priority
 import dagger.hilt.android.AndroidEntryPoint
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
+
     private lateinit var binding: FragmentRunBinding
     private val viewModel: MainViewModel by viewModels()
     private lateinit var adapter : RunAdapter
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    @set:Inject
+    var name  = ""
+
+    //@RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentRunBinding.inflate(inflater)
-        perm()
+
+        toolBarText()
+        //ignoreBattery()
+        if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.TIRAMISU){
+            perm()
+        }
+
+
         requestPermission()
         //reqNotification()
 
@@ -48,10 +80,40 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding.rvRuns.adapter = adapter
         binding.rvRuns.layoutManager =LinearLayoutManager(context)
 
+        when(viewModel.sortType){
+            SortType.DATE -> binding.spinner.setSelection(0)
+            SortType.AVG_SPEED -> binding.spinner.setSelection(1)
+            SortType.DISTANCE -> binding.spinner.setSelection(2)
+            SortType.TIME -> binding.spinner.setSelection(3)
+            SortType.CALORIES_BURNED -> binding.spinner.setSelection(4)
 
-        viewModel.setRunAdapterByDate().observe(viewLifecycleOwner, Observer {
-            adapter.differ.submitList(it)
+
+        }
+
+        binding.spinner.onItemSelectedListener = object : OnItemSelectedListener{
+            override fun onItemSelected(adapter: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                when(pos){
+                    0 -> viewModel.sortRun(SortType.DATE)
+                    1 -> viewModel.sortRun(SortType.AVG_SPEED)
+                    2 -> viewModel.sortRun(SortType.DISTANCE)
+                    3 -> viewModel.sortRun(SortType.TIME)
+                    4 -> viewModel.sortRun(SortType.CALORIES_BURNED)
+
+                }
+
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        }
+
+
+        viewModel.run.observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it)
         })
+
+
 
         binding.fab.setOnClickListener {
             findNavController().navigate(RunFragmentDirections.actionRunFragmentToTrackingFragment())
@@ -62,25 +124,27 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         return binding.root
     }
-//    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-//    private fun reqNotification(){
-//       when(!TrackingUtility.hasNotifcationPermission(requireContext())){
-//          true-> pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-//
-//           shouldShowRequestPermissionRationale(  Manifest.permission.POST_NOTIFICATIONS) -> {
-//               EasyPermissions.requestPermissions(
-//                   this,
-//                   "You need to accept the permission to use this app",
-//                   1,
-//                   Manifest.permission.POST_NOTIFICATIONS
-//               )
-//           }
-//
-//           else -> {
-//               pushNotificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
-//           }
-//       }
-//    }
+    fun ignoreBattery(){
+
+
+        val intent = Intent()
+
+        val packageName = context?.packageName
+        val powerManager = context?.getSystemService(Context.POWER_SERVICE) as PowerManager
+        if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
+            intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+            intent.data = Uri.parse("package:$packageName")
+            context?.startActivity(intent)
+        }
+    }
+
+
+
+
+
+
+
+
 
 
 
@@ -107,7 +171,8 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     "You need to accept the permissionbbb to use this app",
                     REQUEST_CODE_LOCATION_PERMISSION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+
                 )
 
             } else {
@@ -167,6 +232,56 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
            }
        }
    }
+    private fun toolBarText(){
+
+        val toolbarName = "Let's go $name!"
+        val activity = activity as MainActivity
+        activity.textToolbar(toolbarName)
+    }
+
+
+//    private fun gpsLocation() {
+//
+//        val locationRequest = LocationRequest.Builder(
+//            Priority.PRIORITY_HIGH_ACCURACY
+//        )
+//            .
+//            .build()
+//        val builder = LocationSettingsRequest.Builder()
+//            .addLocationRequest(locationRequest)
+//        val client = LocationServices.getSettingsClient(this)
+//        val task = client.checkLocationSettings(builder.build())
+//
+//        task.addOnCompleteListener { task ->
+//            try {
+//                task.getResult(ApiException::class.java)
+//                // GPS is already enabled, do you stuff here
+//            } catch (exception: ApiException) {
+//                when (exception.statusCode) {
+//                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED ->
+//                        // Location settings are not satisfied, but this can be fixed
+//                        // by showing the user a dialog.
+//                        try {
+//                            // Cast to a resolvable exception.
+//                            val resolvable = exception as ResolvableApiException
+//                            // Show the dialog by calling startResolutionForResult(),
+//                            // and check the result in onActivityResult().
+//                            resolvable.startResolutionForResult(this,
+//                                REQUEST_CHECK_SETTINGS)
+//                        } catch (sendEx: IntentSender.SendIntentException) {
+//                            // Ignore the error.
+//                        } catch (ignored: ClassCastException) {
+//                            // Ignore, should be an impossible error.
+//                        }
+//                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+//                    }
+//                }
+//            }
+//        }
+
+
+    //}
+
 
 
 

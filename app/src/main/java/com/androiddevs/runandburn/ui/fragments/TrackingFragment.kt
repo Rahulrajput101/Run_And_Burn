@@ -2,10 +2,14 @@ package com.androiddevs.runandburn.ui.fragments
 
 import android.annotation.SuppressLint
 import android.app.Notification
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Toast
@@ -48,13 +52,14 @@ import kotlinx.coroutines.*
 import pub.devrel.easypermissions.EasyPermissions
 import timber.log.Timber
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.round
 
 @AndroidEntryPoint
 class TrackingFragment : Fragment(),MenuProvider {
 
     private lateinit var binding : FragmentTrackingBinding
-    private lateinit var mapView: MapView
+    private  var mapView: MapView? = null
 
     private  val viewModel : MainViewModel by viewModels()
     private var map : GoogleMap? =null
@@ -63,7 +68,9 @@ class TrackingFragment : Fragment(),MenuProvider {
     private var pathPoints = mutableListOf<Polyline>()
 
     private var currentTimeMillis =0L
-    private var weight = 55f
+
+    @set:Inject
+    var weight = 55f
 
     private var menu : Menu? = null
 
@@ -82,33 +89,43 @@ class TrackingFragment : Fragment(),MenuProvider {
          val menuHost : MenuHost = requireActivity()
         menuHost.addMenuProvider(this,viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-        mapView.onCreate(savedInstanceState)
+        mapView?.onCreate(savedInstanceState)
 
-       mapView.getMapAsync{
+       mapView?.getMapAsync{
           map =it
            addAllPolylines()
          }
 
         binding.btnToggleRun.setOnClickListener{
-            toogleRun()
+            if(TrackingUtility.gpsIsOnOrOff(requireContext())){
+                toogleRun()
+            }else{
+                val gpsIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(gpsIntent)
+            }
+
         }
 
 
         binding.btnFinishRun.setOnClickListener{
             zoomToSeeWholeTrack()
-            val timer = Timer()
-            val task = object : TimerTask() {
-                override fun run() {
-                    saveRunToDatabase()
-                }
-            }
-            timer.schedule(task, 1000)
-        }
+//            val timer = Timer()
+//            val task = object : TimerTask() {
+//                override fun run() {
+//                    saveRunToDatabase()
+//                }
+//            }
+//            timer.schedule(task, 1000)
+            saveRunToDatabase()
+          }
+
 
        subscribeToObserves()
 
         return binding.root
     }
+
+
 
     private fun subscribeToObserves(){
         TrackingService.isTracking.observe(viewLifecycleOwner, Observer {
@@ -146,7 +163,7 @@ class TrackingFragment : Fragment(),MenuProvider {
         this.isTracking = isTracking
         if(!isTracking){
             binding.btnToggleRun.text = "Start"
-            if(currentTimeMillis>0){
+            if(currentTimeMillis>3000){
                 binding.btnFinishRun.visibility = View.VISIBLE
             }
 
@@ -187,9 +204,9 @@ class TrackingFragment : Fragment(),MenuProvider {
 
             CameraUpdateFactory.newLatLngBounds(
                 bounds.build(),
-                mapView.width,
-                mapView.height,
-                (mapView.height * 0.15f).toInt()
+                mapView!!.width,
+                mapView!!.height,
+                (mapView!!.height * 0.15f).toInt()
             )
         )
 
@@ -212,8 +229,8 @@ class TrackingFragment : Fragment(),MenuProvider {
                 distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
             }
             val dateTimeStamp = Calendar.getInstance().timeInMillis
-            val avgSpeed = round((distanceInMeters/1000) / (currentTimeMillis/1000f*60*60) *10)/10
-            val caloriesBurned =((distanceInMeters/1000) * weight).toInt()
+            val avgSpeed = round((distanceInMeters/1000f) / (currentTimeMillis/1000f*60*60) *10)/10f
+            val caloriesBurned =((distanceInMeters/1000f) * weight).toInt()
             val run = Run(bmp,dateTimeStamp,avgSpeed,distanceInMeters,currentTimeMillis,caloriesBurned)
             viewModel.insert(run)
             Snackbar.make(
@@ -293,32 +310,32 @@ class TrackingFragment : Fragment(),MenuProvider {
     }
     override fun onResume() {
         super.onResume()
-        mapView.onResume()
+        mapView?.onResume()
     }
 
     override fun onStart() {
         super.onStart()
-       mapView.onStart()
+       mapView?.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        mapView.onStop()
+        mapView?.onStop()
     }
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()
+        mapView?.onPause()
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
-        mapView.onLowMemory()
+        mapView?.onLowMemory()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        mapView.onSaveInstanceState(outState)
+        mapView?.onSaveInstanceState(outState)
     }
 
 
@@ -357,6 +374,9 @@ class TrackingFragment : Fragment(),MenuProvider {
        sendCommandToService(ACTION_STOP_SERVICE)
        findNavController().navigate(TrackingFragmentDirections.actionTrackingFragmentToRunFragment())
     }
+
+
+
 
 
 }

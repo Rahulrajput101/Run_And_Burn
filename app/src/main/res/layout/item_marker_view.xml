@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="16dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+
+            <TextView
+                android:id="@+id/cardViewDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DATE"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/cardViewAvgSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AVERAGE SPEED"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/cardViewDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DISTANCE"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/cardViewTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TIME"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/cardViewCaloriesBurned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CALORIES BURNED"
+                android:textSize="15sp" />
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</layout>
+
+
+
