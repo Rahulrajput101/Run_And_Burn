@@ -67,7 +67,7 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         binding = FragmentRunBinding.inflate(inflater)
 
         toolBarText()
-        //ignoreBattery()
+        ignoreBattery()
         if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.TIRAMISU){
             perm()
         }
@@ -132,7 +132,7 @@ class RunFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         val packageName = context?.packageName
         val powerManager = context?.getSystemService(Context.POWER_SERVICE) as PowerManager
         if (!powerManager.isIgnoringBatteryOptimizations(packageName)) {
-            intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+            intent.action = Settings.ACTION_BATTERY_SAVER_SETTINGS
             intent.data = Uri.parse("package:$packageName")
             context?.startActivity(intent)
         }
