@@ -74,12 +74,17 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:textColor="@color/black"
-                android:hint="Your Weight"
-                android:inputType="textPersonName" />
+                android:hint="Your Weight in Kg"
+                android:inputType="numberDecimal" />
 
 
         </com.google.android.material.textfield.TextInputLayout>
-
+<!--        <soup.neumorphism.NeumorphButton-->
+<!--            style="@style/Widget.Neumorph.Button"-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:text="@string/hello_blank_fragment"/>-->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintBottom"
             android:layout_width="match_parent"
@@ -89,6 +94,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent">
+
 
             <TextView
                 android:id="@+id/tvContinue"
@@ -105,7 +111,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

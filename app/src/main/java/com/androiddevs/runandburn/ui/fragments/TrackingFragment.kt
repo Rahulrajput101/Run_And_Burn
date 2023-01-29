@@ -80,8 +80,6 @@ class TrackingFragment : Fragment(),MenuProvider {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-
         // Inflate the layout for this fragment
         binding = FragmentTrackingBinding.inflate(inflater)
         mapView = binding.mapView
@@ -96,10 +94,12 @@ class TrackingFragment : Fragment(),MenuProvider {
            addAllPolylines()
          }
 
+
         binding.btnToggleRun.setOnClickListener{
             if(TrackingUtility.gpsIsOnOrOff(requireContext())){
                 toogleRun()
             }else{
+
                 val gpsIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
                 startActivity(gpsIntent)
             }
@@ -109,18 +109,14 @@ class TrackingFragment : Fragment(),MenuProvider {
 
         binding.btnFinishRun.setOnClickListener{
             zoomToSeeWholeTrack()
-//            val timer = Timer()
-//            val task = object : TimerTask() {
-//                override fun run() {
-//                    saveRunToDatabase()
-//                }
-//            }
-//            timer.schedule(task, 1000)
+
             saveRunToDatabase()
           }
 
 
        subscribeToObserves()
+
+
 
         return binding.root
     }
@@ -175,22 +171,7 @@ class TrackingFragment : Fragment(),MenuProvider {
     }
 
 
-//    private fun moveCameraToZoomOut(){
-//        val bounds = LatLngBounds.Builder()
-//        for(polyline in pathPoints){
-//            for(pos in polyline){
-//                bounds.include(pos)
-//            }
-//        }
-//        map?.moveCamera(
-//            CameraUpdateFactory.newLatLngBounds(
-//                bounds.build(),
-//                mapView.width,
-//                mapView.height,
-//                (mapView.height *0.05f).toInt()
-//            )
-//        )
-//    }
+
     private fun zoomToSeeWholeTrack() {
         val bounds = LatLngBounds.Builder()
         for(polyline in pathPoints) {
@@ -211,16 +192,6 @@ class TrackingFragment : Fragment(),MenuProvider {
         )
 
     }
-//
-//    //Calculate the markers to get their position
-//    LatLngBounds.Builder b = new LatLngBounds.Builder();
-//    for (Marker m : markers) {
-//        b.include(m.getPosition());
-//    }
-//    LatLngBounds bounds = b.build();
-////Change the padding as per needed
-//    CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 25,25,5);
-//    mMap.animateCamera(cu);
 
     private fun saveRunToDatabase(){
         map?.snapshot {  bmp->
@@ -229,7 +200,7 @@ class TrackingFragment : Fragment(),MenuProvider {
                 distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
             }
             val dateTimeStamp = Calendar.getInstance().timeInMillis
-            val avgSpeed = round((distanceInMeters/1000f) / (currentTimeMillis/1000f*60*60) *10)/10f
+            val avgSpeed = round((distanceInMeters/1000f) / (currentTimeMillis/1000f/60/60) *10)/10f
             val caloriesBurned =((distanceInMeters/1000f) * weight).toInt()
             val run = Run(bmp,dateTimeStamp,avgSpeed,distanceInMeters,currentTimeMillis,caloriesBurned)
             viewModel.insert(run)
@@ -277,36 +248,39 @@ class TrackingFragment : Fragment(),MenuProvider {
                 .add(lastLatLng)
                 map?.addPolyline(polyOptions)
         }
-
     }
 
 
     //@RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun sendCommandToService(action: String) {
 
-        Intent(requireContext(), TrackingService::class.java).also {
-            it.action = action
-            requireContext().startService(it)
-            Timber.d(" runjjjjj")
-//
-//        if (TrackingUtility.hasNotifcationPermission(requireContext())) {
-//            Intent(requireContext(), TrackingService::class.java).also {
-//                it.action = action
-//                requireContext().startService(it)
-//                Timber.d(" runjjjjj")
-//            }
-//        } else {
-//            //Toast.makeText(requireContext(),"Allow the Notification in setting for using this feature", Toast.LENGTH_LONG
-//            //).show()
-//            EasyPermissions.requestPermissions(
-//                this,
-//                "Allow the Notification for using this feature",
-//                1,
-//                android.Manifest.permission.POST_NOTIFICATIONS
-//            )
-//        }
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+        if(TrackingUtility.hasNotifcationPermission(requireContext()) && TrackingUtility.hasLocationPermission(requireContext())){
+            Intent(requireContext(), TrackingService::class.java).also {
+                it.action = action
+                requireContext().startService(it)
+            }
+        }else{
+            findNavController().navigate(TrackingFragmentDirections.actionTrackingFragmentToRunFragment())
+        }
+    }else{
+        if(TrackingUtility.hasLocationPermission(requireContext())){
+            Intent(requireContext(), TrackingService::class.java).also {
+                it.action = action
+                requireContext().startService(it)
+            }
+        }else{
+
+            findNavController().navigate(TrackingFragmentDirections.actionTrackingFragmentToRunFragment())
+
 
         }
+
+    }
+
+
+
+
     }
     override fun onResume() {
         super.onResume()

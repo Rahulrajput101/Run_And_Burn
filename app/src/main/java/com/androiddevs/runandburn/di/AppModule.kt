@@ -5,13 +5,16 @@ import android.content.Context.MODE_PRIVATE
 import android.media.MediaCodec.MetricsConstants.MODE
 import android.view.Display.Mode
 import android.content.SharedPreferences
+import android.widget.AdapterView
 import androidx.room.Room
 import com.androiddevs.runandburn.db.RunningDatabase
 import com.androiddevs.runandburn.utlis.Constants.KEY_FIRST_TIME
 import com.androiddevs.runandburn.utlis.Constants.KEY_NAME
+import com.androiddevs.runandburn.utlis.Constants.KEY_ONLY_ONE_TIME
 import com.androiddevs.runandburn.utlis.Constants.KEY_WEIGHT
 import com.androiddevs.runandburn.utlis.Constants.RUNNING_DATABASE_NAME
 import com.androiddevs.runandburn.utlis.Constants.SHARED_PREFERENCE_NAME
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -55,5 +58,10 @@ object AppModule {
     @Provides
     fun provideFirst(sharedPreferences: SharedPreferences)  = sharedPreferences.getBoolean(
         KEY_FIRST_TIME, true)
+
+
+
+
+
 
 }

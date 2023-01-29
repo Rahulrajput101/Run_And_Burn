@@ -11,11 +11,13 @@ import android.os.Build.VERSION_CODES.Q
 import android.os.PowerManager
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
+import com.androiddevs.runandburn.R
 import com.androiddevs.runandburn.service.Polyline
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.concurrent.TimeUnit
@@ -24,7 +26,24 @@ import kotlin.math.min
 object TrackingUtility {
 
 
-    fun  hasLocationPermission(context : Context) : Boolean= if(Build.VERSION.SDK_INT < Build.VERSION_CODES.Q){
+    fun fLocationPermission(context: Context) =
+        ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+
+    fun cLocationPermission(context: Context) =
+        ActivityCompat.checkSelfPermission(context,Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    fun notificationPermission(context: Context) =
+        ActivityCompat.checkSelfPermission(context,Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+
+
+
+
+
+
+
+    fun  hasLocationPermission(context : Context) : Boolean  =
         EasyPermissions.hasPermissions(context,
            android.Manifest.permission.ACCESS_FINE_LOCATION,
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -32,31 +51,14 @@ object TrackingUtility {
             )
 
 
-    } else {
-        EasyPermissions.hasPermissions(context,
-            android.Manifest.permission.ACCESS_FINE_LOCATION,
-            android.Manifest.permission.ACCESS_COARSE_LOCATION,
-           // android.Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-        )
-    }
-
-    fun hasNotifcationPermission(context: Context) : Boolean = if (Build.VERSION.SDK_INT> Build.VERSION_CODES.S_V2){
-        EasyPermissions.hasPermissions(context,
-        android.Manifest.permission.POST_NOTIFICATIONS)
-    }
-    else{
-        false
-     }
-
+    //if (Build.VERSION.SDK_INT> Build.VERSION_CODES.S_V2)
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-   fun requestNotificationPermission(context: Context) : Boolean {
+    fun hasNotifcationPermission(context: Context) : Boolean = EasyPermissions.hasPermissions(context,
+        android.Manifest.permission.POST_NOTIFICATIONS)
 
-        return ActivityCompat.checkSelfPermission(
-           context,
-            Manifest.permission.POST_NOTIFICATIONS
-        ) == PackageManager.PERMISSION_GRANTED
 
-    }
+
+
 
 
     fun reqIngnoreBatterConsumption(context: Context?) : Boolean {
@@ -113,7 +115,7 @@ object TrackingUtility {
 
     fun gpsIsOnOrOff(context: Context) : Boolean{
 
-        val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
         val isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
         if(!isGpsEnabled && !isNetworkEnabled) {
@@ -122,6 +124,17 @@ object TrackingUtility {
 //            startActivity(gpsIntent)
         }
         return true
+    }
+
+    fun colorList(context: Context) : List<Int>{
+        return listOf(
+            ContextCompat.getColor(context, R.color.pink22),
+            ContextCompat.getColor(context, R.color.lightGreen22),
+            ContextCompat.getColor(context, R.color.purple_200),
+            ContextCompat.getColor(context, R.color.beige22),
+            ContextCompat.getColor(context, R.color.teal_200),
+            ContextCompat.getColor(context, R.color.md_blue_400)
+        )
     }
 
 }

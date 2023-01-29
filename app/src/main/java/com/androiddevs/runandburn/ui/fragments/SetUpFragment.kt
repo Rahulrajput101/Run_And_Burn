@@ -1,11 +1,18 @@
 package com.androiddevs.runandburn.ui.fragments
 
+import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.androiddevs.runandburn.R
@@ -15,6 +22,7 @@ import com.androiddevs.runandburn.databinding.FragmentSetUpBinding
 import com.androiddevs.runandburn.ui.MainActivity
 import com.androiddevs.runandburn.utlis.Constants.KEY_FIRST_TIME
 import com.androiddevs.runandburn.utlis.Constants.KEY_NAME
+import com.androiddevs.runandburn.utlis.Constants.KEY_ONLY_ONE_TIME
 import com.androiddevs.runandburn.utlis.Constants.KEY_WEIGHT
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,13 +32,14 @@ import javax.inject.Inject
 class SetUpFragment : Fragment() {
 
     private lateinit var binding: FragmentSetUpBinding
-    //private lateinit var activity: MainActivity
+
 
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
     @set:Inject
     var firstAttempt = true
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,9 +48,24 @@ class SetUpFragment : Fragment() {
         // Inflate the layout for this fragment
 
         binding = FragmentSetUpBinding.inflate(inflater)
-        //activity = MainActivity()
 
-        if(!firstAttempt){
+        val manufactruer = Build.MANUFACTURER
+
+        val sharedPref = context?.getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
+        val hasRun = sharedPref?.getBoolean("hasRun", false)
+
+        if (!hasRun!!) {
+            // Run the method here
+            if (manufactruer == "vivo") {
+                ignoreBattery()
+            }
+            val editor = sharedPref.edit()
+            editor.putBoolean("hasRun", true)
+            editor.apply()
+        }
+
+
+        if (!firstAttempt) {
             val navOptions = NavOptions.Builder()
                 .setPopUpTo(R.id.setUpFragment, true)
                 .build()
@@ -55,25 +79,17 @@ class SetUpFragment : Fragment() {
 
         }
 
-
-
-            binding.tvContinue.setOnClickListener {
-                val success = getPersonalDetailforSharedPref()
-                if(success){
-                    findNavController().navigate(SetUpFragmentDirections.actionSetUpFragmentToRunFragment())
-                }else{
-                    Snackbar.make(requireView(), "Please enter the al fileds", Snackbar.LENGTH_SHORT).show()
-                }
-
-
+        binding.tvContinue.setOnClickListener {
+            val success = getPersonalDetailforSharedPref()
+            if (success) {
+                findNavController().navigate(SetUpFragmentDirections.actionSetUpFragmentToRunFragment())
+            } else {
+                Snackbar.make(requireView(), "Please enter the all fileds", Snackbar.LENGTH_SHORT)
+                    .show()
             }
 
 
-
-
-
-
-
+        }
 
 
         return binding.root
@@ -93,13 +109,30 @@ class SetUpFragment : Fragment() {
 
         val toolbarText = " Let's go $name!"
         val act = activity as MainActivity
-        //requireActivity().findViewById(R.id.tvToolbarTitle) = toolbarText
         act.textToolbar(toolbarText)
-//        val activity =requireActivity()
-//        activity.findViewById(R.id.tvToolbarTitle)
         return true
 
     }
+
+    fun ignoreBattery() {
+        val dialog = AlertDialog.Builder(requireContext())
+        dialog.setTitle(" Don't Ignore")
+        dialog.setMessage("To ensure this app will work, please go to Background Power Consumption Management in Battery settings and select the option of Don't restrict.")
+        dialog.setPositiveButton("Go to settings") { _, _ ->
+            val intent = Intent(Settings.ACTION_SETTINGS)
+            startActivity(intent)
+        }
+        dialog.setNegativeButton("cancel") { dialogInterface, _ ->
+            dialogInterface.cancel()
+        }
+        dialog.create()
+        dialog.show()
+
+        sharedPreferences.edit()
+            .putBoolean(KEY_ONLY_ONE_TIME, true)
+            .apply()
+    }
+
 }
 
 

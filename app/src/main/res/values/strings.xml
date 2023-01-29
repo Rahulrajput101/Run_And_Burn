@@ -4,6 +4,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="permission_denied_message">The following permission are required: %1$s</string>
 
     <string-array name="filter_options">
         <item>Date</item>
@@ -12,4 +13,22 @@
         <item>Running Time</item>
         <item>Calories Burned</item>
     </string-array>
+
+    <string-array name="filter_color">
+        <item>#DBECF6</item>
+        <item>#87CEFA</item>
+        <item>#00008B</item>
+        <item>#98FB98</item>
+        <item>#006400</item>
+        <item>#FFC0CB</item>
+        <item>#9C27B0</item>
+    </string-array>
+
+<!--    <color name="backgroundblue22"></color>-->
+<!--    <color name="lightBlue22"></color>-->
+<!--    <color name="darkBlue22"></color>-->
+<!--    <color name="lightGreen22"></color>-->
+<!--    <color name="darkGreen22"></color>-->
+<!--    <color name="pink22"></color>-->
+<!--    <color name="purple22"></color>-->
 </resources>

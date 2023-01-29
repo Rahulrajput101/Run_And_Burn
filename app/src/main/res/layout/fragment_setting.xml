@@ -52,8 +52,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:textColor="@color/black"
-                android:hint="Your Weight"
-                android:inputType="textPersonName" />
+                android:hint="Your Weight in Kg"
+                android:inputType="numberDecimal" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

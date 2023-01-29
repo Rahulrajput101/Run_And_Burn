@@ -3,6 +3,7 @@ package com.androiddevs.runandburn.utlis
 import android.graphics.Color
 import com.androiddevs.runandburn.R
 import pub.devrel.easypermissions.EasyPermissions
+import java.security.AllPermission
 
 object Constants {
 
@@ -31,5 +32,8 @@ object Constants {
     const val  KEY_FIRST_TIME = "KEY_FIRST_TIME"
     const val KEY_NAME = " KEY_NAME"
     const val KEY_WEIGHT = "KEY_WEIGHT"
+
+    const val KEY_ONLY_ONE_TIME = "KEY_ONLY_ONE_TIME"
+
 
 }

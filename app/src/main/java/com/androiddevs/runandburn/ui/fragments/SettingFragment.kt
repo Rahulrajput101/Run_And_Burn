@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.androiddevs.runandburn.R
 import com.androiddevs.runandburn.databinding.FragmentRunBinding
 import com.androiddevs.runandburn.databinding.FragmentSettingBinding
@@ -69,6 +70,7 @@ class SettingFragment : Fragment() {
         val toolbarText = "Let's go ${name}!"
         val activity = activity as MainActivity
         activity.textToolbar(toolbarText)
+        Toast.makeText(requireContext()," $toolbarText",Toast.LENGTH_LONG).show()
 
         return true
 

@@ -6,7 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.view.size
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
@@ -22,6 +24,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import dagger.hilt.android.AndroidEntryPoint
 import kotlin.math.round
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class StatisticFragment : Fragment() {
@@ -37,6 +40,8 @@ class StatisticFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentStatisticBinding.inflate(inflater)
+
+
         subscribeToObserver()
 
         setUpBarGraph()
@@ -53,6 +58,7 @@ class StatisticFragment : Fragment() {
       }
         binding.BarGraph.axisLeft.apply {
             axisLineColor = Color.BLACK
+            axisMinimum = 0f
             textColor = Color.BLACK
             setDrawGridLines(false)
         }
@@ -103,16 +109,21 @@ class StatisticFragment : Fragment() {
         })
 
 
+
         viewModel.runSortedByDate.observe(viewLifecycleOwner,Observer{
             it?.let{
                  val allAvgSpeed = it.indices.map { i-> BarEntry(i.toFloat(), it[i].avgSpeedInKMH)
                  }
-                val barDataSet = BarDataSet(allAvgSpeed, "AvgSpeed over time").apply {
+                val barDataSet = BarDataSet(allAvgSpeed, "AvgSpeed over time",).apply {
                     valueTextColor = Color.BLACK
-                    color = ContextCompat.getColor(requireContext(),R.color.purple_200)
                 }
+
+                barDataSet.colors = TrackingUtility.colorList(requireContext()).shuffled()
+                barDataSet.valueTextSize = 12f
+
                 binding.BarGraph.data = BarData(barDataSet)
                 binding.BarGraph.marker = CustomMarkerView(it,requireContext(),R.layout.item_marker_view)
+                binding.BarGraph.animateXY(3000,3000)
                 binding.BarGraph.invalidate()
             }
         })
@@ -120,5 +131,6 @@ class StatisticFragment : Fragment() {
 
 
     }
+
 
 }

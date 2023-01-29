@@ -87,7 +87,7 @@ class MainViewModel @Inject constructor(
   }
 
   fun sortRun( sortType: SortType) = when(sortType){
-    SortType.DATE -> setRunAdapterByDate.value?.let{ run.value = it}
+    SortType.DATE -> (setRunAdapterByDate.value?.let{ run.value = it} )
     SortType.AVG_SPEED -> setRunAdapterByAvgSpeed.value?.let{ run.value = it}
     SortType.DISTANCE -> setRunAdapterByDistance.value?.let{ run.value = it}
     SortType.TIME -> setRunAdapterByTime.value?.let{ run.value = it}
@@ -100,7 +100,12 @@ class MainViewModel @Inject constructor(
 
   fun insert(run : Run) = viewModelScope.launch {
     mainRepositary.insertRun(run)
-  }
 
+
+
+  }
+  fun delete(run  : Run ) = viewModelScope.launch {
+    mainRepositary.deleteRun(run)
+  }
 
 }
