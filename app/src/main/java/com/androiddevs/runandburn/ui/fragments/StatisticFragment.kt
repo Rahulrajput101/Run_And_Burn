@@ -1,5 +1,7 @@
 package com.androiddevs.runandburn.ui.fragments
 
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import androidx.fragment.app.Fragment

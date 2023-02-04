@@ -5,6 +5,7 @@
 <!--        <item name="colorPrimary">@color/md_blue_900</item>-->
 <!--        <item name="colorSecondary">@color/md_blue_500</item>-->
 <!--        <item name="android:colorBackground">@color/md_blue_700</item>-->
+<!--        <item name="android:navigationBarColor">@color/black</item>-->
         <item name="colorPrimary">@color/newToolbar</item>
         <item name="colorSecondary">@color/white</item>
         <item name="android:colorBackground">@color/newBackgroundBlue</item>

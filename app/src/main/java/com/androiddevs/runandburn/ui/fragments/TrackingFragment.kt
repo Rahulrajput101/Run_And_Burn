@@ -20,6 +20,7 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.androiddevs.runandburn.R
 import com.androiddevs.runandburn.service.TrackingService
@@ -131,7 +132,8 @@ class TrackingFragment : Fragment(),MenuProvider {
         TrackingService.pathPoints.observe(viewLifecycleOwner, Observer{
             pathPoints = it
             addLatestPolyline()
-            moveFocus()
+            moveFocusOnLocation()
+
         })
 
         TrackingService.timeRunInMillis.observe(viewLifecycleOwner, Observer {
@@ -141,8 +143,6 @@ class TrackingFragment : Fragment(),MenuProvider {
         })
     }
 
-
-   // @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 
     private fun toogleRun(){
         if(isTracking){
@@ -159,9 +159,6 @@ class TrackingFragment : Fragment(),MenuProvider {
         this.isTracking = isTracking
         if(!isTracking){
             binding.btnToggleRun.text = "Start"
-            if(currentTimeMillis>3000){
-                binding.btnFinishRun.visibility = View.VISIBLE
-            }
 
         }else{
             binding.btnToggleRun.text = "Stop"
@@ -214,14 +211,23 @@ class TrackingFragment : Fragment(),MenuProvider {
     }
 
 
-
-    private fun moveFocus(){
+    private  fun moveFocusOnLocation(){
         if(pathPoints.isNotEmpty() && pathPoints.last().isNotEmpty()){
             map?.animateCamera(
                 CameraUpdateFactory.newLatLngZoom(
                     pathPoints.last().last(),
                     ZOOM_TO
-                )
+                ), object : GoogleMap.CancelableCallback{
+                    override fun onCancel() {
+                        Timber.d("animation cancelled")
+                    }
+
+                    override fun onFinish() {
+                        binding.btnFinishRun.visibility = View.VISIBLE
+                    }
+
+
+                }
             )
         }
     }
@@ -250,8 +256,6 @@ class TrackingFragment : Fragment(),MenuProvider {
         }
     }
 
-
-    //@RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun sendCommandToService(action: String) {
 
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
@@ -277,9 +281,6 @@ class TrackingFragment : Fragment(),MenuProvider {
         }
 
     }
-
-
-
 
     }
     override fun onResume() {

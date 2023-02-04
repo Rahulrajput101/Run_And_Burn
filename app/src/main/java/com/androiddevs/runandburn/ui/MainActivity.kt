@@ -1,10 +1,15 @@
 package com.androiddevs.runandburn.ui
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -24,10 +29,16 @@ class MainActivity : AppCompatActivity() {
      private lateinit var binding: ActivityMainBinding
      private lateinit var navController: NavController
 
+     @set: Inject
+     var name = ""
+
+
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
+         requestedOrientation =ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
         lifecycleScope.launch{
@@ -39,6 +50,12 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.navController
         binding.bottomNavigationView.setupWithNavController(navController)
+        window.isNavigationBarContrastEnforced = false
+        //window.navigationBarDividerColor = ContextCompat.getColor(this,R.color.newToolbar)
+        window.navigationBarColor = ContextCompat.getColor(this,R.color.black)
+
+
+        textToolbar(name)
 
         navHostFragment.findNavController()
             .addOnDestinationChangedListener{_, destination, _ ->
@@ -58,7 +75,8 @@ class MainActivity : AppCompatActivity() {
 
     }
     fun textToolbar(toolbartext : String) {
-         binding.tvToolbarTitle.text = toolbartext
+        name = "Let's go $toolbartext"
+         binding.tvToolbarTitle.text = name
 
     }
 

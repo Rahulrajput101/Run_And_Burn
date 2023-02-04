@@ -107,9 +107,8 @@ class SetUpFragment : Fragment() {
             .putBoolean(KEY_FIRST_TIME, false)
             .apply()
 
-        val toolbarText = " Let's go $name!"
         val act = activity as MainActivity
-        act.textToolbar(toolbarText)
+        act.textToolbar(name)
         return true
 
     }
@@ -117,7 +116,7 @@ class SetUpFragment : Fragment() {
     fun ignoreBattery() {
         val dialog = AlertDialog.Builder(requireContext())
         dialog.setTitle(" Don't Ignore")
-        dialog.setMessage("To ensure this app will work, please go to Background Power Consumption Management in Battery settings and select the option of Don't restrict.")
+        dialog.setMessage("To ensure this app will work go to, Battery settings -> Background Power Consumption -> Run and Burn ,and select the option of Don't restrict.")
         dialog.setPositiveButton("Go to settings") { _, _ ->
             val intent = Intent(Settings.ACTION_SETTINGS)
             startActivity(intent)

@@ -30,38 +30,37 @@ object AppModule {
     @Singleton
     @Provides
     fun runnningDatabase(
-        @ApplicationContext app : Context
+        @ApplicationContext app: Context
     ) = Room.databaseBuilder(
-      app,
+        app,
         RunningDatabase::class.java,
         RUNNING_DATABASE_NAME
     ).build()
 
     @Singleton
     @Provides
-    fun getRunDao(db : RunningDatabase) = db.getRunDao()
+    fun getRunDao(db: RunningDatabase) = db.getRunDao()
 
     @Singleton
     @Provides
-    fun provideSharedPreferences(@ApplicationContext app : Context) =
+    fun provideSharedPreferences(@ApplicationContext app: Context) =
         app.getSharedPreferences(SHARED_PREFERENCE_NAME, MODE_PRIVATE)
 
     @Singleton
     @Provides
-    fun provideName(sharedPreferences: SharedPreferences)  = sharedPreferences.getString(KEY_NAME,"") ?: ""
+    fun provideName(sharedPreferences: SharedPreferences) =
+        sharedPreferences.getString(KEY_NAME, "") ?: ""
 
     @Singleton
     @Provides
-    fun provideWeight(sharedPreferences: SharedPreferences)  = sharedPreferences.getFloat(KEY_WEIGHT, 60f)
+    fun provideWeight(sharedPreferences: SharedPreferences) =
+        sharedPreferences.getFloat(KEY_WEIGHT, 60f)
 
     @Singleton
     @Provides
-    fun provideFirst(sharedPreferences: SharedPreferences)  = sharedPreferences.getBoolean(
-        KEY_FIRST_TIME, true)
-
-
-
-
+    fun provideFirst(sharedPreferences: SharedPreferences) = sharedPreferences.getBoolean(
+        KEY_FIRST_TIME, true
+    )
 
 
 }

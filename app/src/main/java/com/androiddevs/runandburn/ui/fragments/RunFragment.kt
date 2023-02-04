@@ -61,22 +61,12 @@ class RunFragment : Fragment() {
 
 
 
-
-
-
-
-    @set:Inject
-    var name = ""
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentRunBinding.inflate(inflater)
-        Toast.makeText(requireContext()," $name", Toast.LENGTH_LONG).show()
-        toolBarText()
         requestPermission()
         adapter = RunAdapter()
         swipeAble()
@@ -207,16 +197,6 @@ class RunFragment : Fragment() {
         }
 
     }
-
-
-    private fun toolBarText() {
-
-        val toolbarName = "Let's go $name!"
-        val activity = activity as MainActivity
-        activity.textToolbar(toolbarName)
-    }
-
-
 
 
     fun requestPermission() {

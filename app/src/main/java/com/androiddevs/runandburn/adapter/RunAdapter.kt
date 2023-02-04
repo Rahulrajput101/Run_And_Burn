@@ -39,9 +39,6 @@ class RunAdapter() : RecyclerView.Adapter<RunAdapter.MyRunViewHolder>() {
     override fun onBindViewHolder(holder: MyRunViewHolder, position: Int) {
         val run = differ.currentList[position]
         holder.bind(run)
-//        holder.itemView.setOnClickListener {
-//        onUserCliclListener.onClick(run)
-//        }
 
     }
 
@@ -83,10 +80,5 @@ class RunAdapter() : RecyclerView.Adapter<RunAdapter.MyRunViewHolder>() {
 
     }
 
-//    class OnUserClickListener(val clickListener: (run : Run) -> Unit){
-//        fun onClick(run : Run) = clickListener(run)
-//    }
-//    class OnUserClickListener(val clickListener: (article: Article) -> Unit) {
-//        fun onClick(article: Article) = clickListener(article)
-//    }
+
 }

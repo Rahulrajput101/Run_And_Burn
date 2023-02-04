@@ -53,9 +53,9 @@ class SettingFragment : Fragment() {
         val weight = sharedPreferences.getFloat(KEY_WEIGHT,60f)
         binding.changeName.setText(name)
         binding.changeWeight.setText(weight.toString())
-
-
     }
+
+
     private fun changeDetail() : Boolean{
         val name = binding.changeName.text.toString()
         val weight = binding.changeWeight.text.toString()
@@ -67,10 +67,10 @@ class SettingFragment : Fragment() {
             .putString(KEY_NAME,name)
             .putFloat(KEY_WEIGHT,weight.toFloat())
             .apply()
-        val toolbarText = "Let's go ${name}!"
+
         val activity = activity as MainActivity
-        activity.textToolbar(toolbarText)
-        Toast.makeText(requireContext()," $toolbarText",Toast.LENGTH_LONG).show()
+        activity.textToolbar(name)
+        Toast.makeText(requireContext()," $name",Toast.LENGTH_LONG).show()
 
         return true
 
